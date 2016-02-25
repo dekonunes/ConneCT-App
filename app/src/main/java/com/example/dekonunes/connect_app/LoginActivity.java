@@ -35,13 +35,17 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -360,9 +364,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public class UserLoginTask extends AsyncTask<String, Void, String> {
 
         Context ctx;
-        BackgroundTask (Context ctx) {
+
+        BackgroundTask(Context ctx) {
             this.ctx = ctx;
         }
+
         private final String mEmail;
         private final String mPassword;
 
@@ -372,43 +378,53 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(String... params) {
             // TODO: attempt authentication against a network service.
             String reg_url = "localhost";
             String login_url = "localhost";
-            String method = params[0];
 
-            if (method.equals("register")) {
-                String name = params[1];
-                String user_name = params[2];
-                String user_pass = params[3];
+            String login_name = params[0];
+            String login_pass = params[1];
 
-                try {
-                    URL url = new URL(reg_url);
-                    HttpURLConnection httpConnection = (HttpURLConnection) new URL(url).openConnection();
-                    HttpURLConnection.setRequestMethod("POST");
-                    HttpURLConnection.setDoOutput(true);
-                    OutputStream OS = httpConnection.getOutputStream();
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS,"UTF-8"));
-                    String data = URLEncoder.encode("user","UTF-8") + "=" + URLEncoder.encode(name,"UTF-8") + "&" +
-                            URLEncoder.encode("user_name","UTF-8") + "=" + URLEncoder.encode(user_name,"UTF-8") + "&" +
-                            URLEncoder.encode("user_pass","UTF-8") + "=" + URLEncoder.encode(user_pass, "UTF-8");
-                    bufferedWriter.write(data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    OS.close();
-                    InputStream IS = httpConnection.getInputStream();
-                    IS.close();
-                    return "Registrado com Sucesso";
+            try {
+                URL url = new URL(login_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String data = URLEncoder.encode("login_name", "UTF-8") + "=" + URLEncoder.encode(login_name, "UTF-8") + "&" +
+                        URLEncoder.encode("login_pass", "UTF-8") + "=" + URLEncoder.encode(login_pass, "UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
 
-                } catch (InterruptedException e) {
-                    return false;
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                String response = "";
+                String linha = "";
+                while ((linha = bufferedReader.readLine()) != null)) {
+                    response += linha;
                 }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return true;
+
+
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
@@ -423,7 +439,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(ctx,result,Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, result, Toast.LENGTH_LONG).show();
         }
 
         @Override
