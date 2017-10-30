@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      ConneCT
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div class="img">
+    <img src="images/logoHome.jpg" alt="homeScreen">
+  </div>
+
+  <form [formGroup]="loginFirebaseAccountForm" (ngSubmit)="sigIn(loginFirebaseAccountForm.value)">
+        <ion-item [class.error]="!email.valid && email.touched">
+            <ion-label floating>E-mail</ion-label>
+            <ion-input type="text" value="" [formControl]="email"></ion-input>
+        </ion-item>
+        <div *ngIf="email.hasError('required') && email.touched" >* E-mail é necessário.</div>
+        <div *ngIf="email.hasError('pattern') && email.touched">* Enter a valid email address.</div>
+        <ion-item [class.error]="!password.valid && password.touched">
+            <ion-label floating>Senha</ion-label>
+            <ion-input type="password" value="" [formControl]="password"></ion-input>
+        </ion-item>
+        <div *ngIf="password.hasError('required') && password.touched" >* Senha é necessário.</div>
+        <div *ngIf="password.hasError('minlength') && password.touched" >* Senha com mínimo de 6 letras.</div>
+        <br/><br/>
+          <button ion-button type="submit" class="custom-button" [disabled]="!loginFirebaseAccountForm.valid" block>Entrar</button>
+        <br/>
+    </form>
+</ion-content>

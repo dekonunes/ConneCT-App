@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Editar telefones
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">Cancel</span>
+        <ion-icon name="md-close" showWhen="android, windows"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label >Telefone atual: {{user?.telephone}}</ion-label>
+    </ion-item>
+    <ion-input type="text" placeholder="Digite o seu novo telefone" #telephone ></ion-input>
+
+    <ion-item>
+      <ion-label >Outro Telefone atual: {{user?.telephoneOther}}</ion-label>
+    </ion-item>
+
+    <ion-input type="text" placeholder="Digite o telefone novo" #telephoneOther ></ion-input>
+  </ion-list>
+  <button ion-button color="primary" block (click)="dismiss()" (click)="updateOtherTelephone(telephoneOther.value)" (click)="updateTelephone(telephone.value)">
+    Salvar novos telefones
+  </button>
+</ion-content>

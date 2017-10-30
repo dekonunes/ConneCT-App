@@ -1,0 +1,107 @@
+<ion-header>
+</ion-header>
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Atualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-card >
+    <ion-card-title text-center>
+      <button ion-button clear color="dark" icon-right
+      (click)="alertDescription(ranking?.title,ranking?.description)">
+        <p>{{ranking?.title}}</p>
+        <ion-icon name="information-circle"></ion-icon>
+      </button>
+      <ion-grid>
+        <ion-row >
+          <ion-col col-8>
+            <p class="descriptionRanking">Você esta acima de {{positionRanking}}% dos jogadores</p>
+            <br>
+            <p class="numberRanking">{{ ranking?.quantity }}</p>
+          </ion-col>
+          <ion-col col-4>
+            <div style="padding-bottom: 90px;">
+              <img class="imgRanking"
+                  src="assets/images/rankingGamification/ballRankingEmpty.jpg"
+              />
+              <img class="imgRanking"
+                  src="assets/images/rankingGamification/ballRanking.jpg"
+                  [ngStyle]="getStyleImgRanking()"
+              />
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-title>
+  </ion-card>
+  <ion-card >
+    <ion-card-title text-center>
+      <button ion-button clear color="dark" icon-right
+      (click)="alertDescription('Carreira','Os emblemas representam o estado
+      da sua carreira')">
+        <p>Carreira</p>
+        <ion-icon name="information-circle"></ion-icon>
+      </button>
+        <ion-grid>
+          <ion-row >
+            <ion-col col-4 *ngFor="let ribbon of ribbonsCareers"
+                    (click)="alertDescription(ribbon?.title,ribbon?.description)">
+              <p class="titleRibbons">{{ribbon?.title}}</p>
+              <img
+                  src="assets/images/ribbonsCareerGamification/ribbon{{ribbon?.id}}.svg"
+                  [class.grayscale]="!ribbon?.isActive"
+                  class="imgRibbon"/>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+    </ion-card-title>
+  </ion-card>
+  <ion-card >
+    <ion-card-title text-center>
+      <button ion-button clear color="dark" icon-right
+      (click)="alertDescription('Artilharia','Estas são as quantidades de dias/semanas que você respondeu consecutivamente')"
+      >
+        <p>Artilharia</p>
+        <ion-icon name="information-circle"></ion-icon>
+      </button>
+      <ion-grid>
+        <ion-row >
+          <ion-col col-6 *ngFor="let ribbon of ribbonsTopScore"
+                  (click)="alertDescription(ribbon?.title,ribbon?.description)">
+          <p class="titleRibbons">{{ribbon?.title}}</p>
+            <img
+                src="assets/images/ribbonsTopScoreGamification/ribbon{{ribbon?.id}}.svg"
+                [class.grayscale]="!ribbon?.isActive"
+                class="imgRibbon"/><span class="textOverImgArtilharia">{{ribbon?.quantity}}</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-title>
+  </ion-card>
+  <ion-card >
+    <ion-card-title text-center>
+      <button ion-button clear color="dark" icon-right
+      (click)="alertDescription('Campeonato','Responda por 365 dias para ser o campeão do campeonato e receber o troféu')">
+        <p>Campeonato</p>
+        <ion-icon name="information-circle"></ion-icon>
+      </button>
+      <ion-grid [ngStyle]="{'height': heightTrophys + 'px'}">
+        <ion-row >
+          <ion-col col-12 >
+            <p>Quantidade de dias respondidos: {{daysCurrent}}</p>
+            <img  class="imgTrofhys" (load)="onLoad($event.target)"
+                src="assets/images/trofhysGamification/trofhyEmpty.jpg"/>
+            <img
+            src="assets/images/trofhysGamification/trofhy.jpg"
+            [ngStyle]="getStyleImgTrophy()"
+            class="imgTrofhys"/>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-title>
+  </ion-card>
+</ion-content>
