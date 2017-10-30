@@ -2,15 +2,10 @@ const admin = require('firebase-admin');
 var db = admin.database();
 var getDiferenceDays = require('./getDiferenceDays');
 
-module.exports = function getDaysCurrent(idCT,idDQ,idAnswer) {
-    return new Promise((resolve) => {
-        db.ref(`/${idCT}/users/${idDQ}/answers/${idAnswer}`)
-        .once("value").then(snapshot => {
-          if(snapshot.val() != null) {
-            let lastAnswerString = snapshot.val()[Object.keys(snapshot.val())[(Object.keys(snapshot.val()).length)-1]]['date'];
-            // console.log(getDiferenceDays(new Date(),new Date(lastAnswerString)));
-            resolve (getDiferenceDays(new Date(),new Date(lastAnswerString)));
-          }
-        })
-    });
-  }
+module.exports = function getDaysCurrent(DQ,index) {
+  if(DQ['answers'] == null)
+    return 0;
+  var indexLastAnwer = Object.keys(DQ['answers'][index])[Object.keys(DQ['answers'][index]).length - 1];
+  var lastAnswerString = DQ['answers'][index][indexLastAnwer]['date'];
+  return getDiferenceDays(new Date(),new Date(lastAnswerString));
+}
