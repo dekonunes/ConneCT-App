@@ -1,49 +1,54 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform} from 'ionic-angular';
+import { Platform, NavController } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { HomePage } from '../pages/home/home';
 import { UserPage } from '../pages/user/user';
+import { TabsNavigationPage } from '../pages/tabs-navigation/tabs-navigation';
 import { UserService } from '../providers/user.service';
 import { AuthService } from '../providers/auth.service';
-
 
 @Component({
   templateUrl: 'app.html',
   providers: [UserService]
 })
 export class MyApp {
-  @ViewChild('homeNav') navCtrl
-
-  rootPage = HomePage;
+  @ViewChild('homeNav') nav: NavController
   pagesMenu: Array<{title: string, component: any, icon: string}>;
-
 
   constructor(
       public platform: Platform,
-      private af: AuthService
+      private authService: AuthService,
   ) {
     this.initializeApp();
-
     this.pagesMenu = [
       { title: 'Meus Dados', component: UserPage , icon: 'person' }
     ];
-
   }
 
-  initializeApp() {
+  ngOnInit() {
+    this.authService.getUID()
+      .then(userLogin => {
+        if(userLogin)
+          this.nav.push(TabsNavigationPage);
+        else
+          this.nav.push(HomePage);
+      })
+   }
+
+   initializeApp() {
     this.platform.ready().then(() => {
       StatusBar.styleDefault();
       Splashscreen.hide();
     });
   }
 
-  logOut(): void {
-    new Promise (() => this.navCtrl.setRoot(HomePage))
-      .then(() => this.af.logOut())
+  logOut() {
+    this.authService.logOut().then(() => this.nav.setRoot(HomePage));
+    // this.authService.logOut().then(() => this.navCtrl.pop());
   }
 
   goToOtherPage(page: {title: string, component: any, icon: string}): void {
-    this.navCtrl.push(page.component);
+    this.nav.push(page.component);
   }
 }

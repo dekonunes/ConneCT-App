@@ -5,5 +5,6 @@ export class Question {
     public answers: string,
     public title: string,
     public description: string,
-    public periodicity: number) {}
+    public periodicity: number
+  ) {}
 }

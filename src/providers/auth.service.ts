@@ -12,14 +12,20 @@ export class AuthService {
   }
 
   signinWithEmail(user: {email: string, password: string}) {
-    return this.afAuth.auth.signInWithEmailAndPassword(user.email,user.password)
-     .then(authState => authState.uid)
-     .catch(erro => console.log(erro))
+    return new Promise(resolve => {
+      this.afAuth.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .then(() => resolve(firebase.auth().signInWithEmailAndPassword(user.email,user.password)));
+      });
   }
 
   getUID(): Promise<string> {
     return new Promise(resolve =>
-      this.afAuth.authState.subscribe(_userUID => resolve(_userUID.uid))
+      this.afAuth.authState.subscribe(_userUID => {
+        if(_userUID)
+          resolve(_userUID.uid)
+        else
+          resolve(null)
+      })
     )
   }
 

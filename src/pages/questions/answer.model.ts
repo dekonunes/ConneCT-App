@@ -2,6 +2,6 @@ export class Answer {
   constructor(
     public questionID: number,
     public answersNumber: number,
-    public date: number) {
+    public date: Date) {
   }
 }

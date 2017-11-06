@@ -27,14 +27,7 @@ export class QuestionsPage implements OnInit {
     public navCtrl: NavController,
     private loadingCtrl: LoadingController,
     private userService: UserService
-  ) {
-      // super();
-      //https://github.com/PraveenJP/ionic-animatedsplash/blob/master/www/css/animate.css
-      //https://juristr.com/blog/2016/01/learning-ng2-dynamic-styles/
-      //https://www.joshmorony.com/getting-familiar-with-local-notifications-in-ionic-2/
-      //https://www.youtube.com/watch?v=ZLUmCBexYBo
-
-    }
+  ) { }
 
   doRefresh(refresher?) {
     this.updateQuestions().then(() => refresher.complete());
@@ -70,7 +63,7 @@ export class QuestionsPage implements OnInit {
   }
 
   sendAnwers(questionID: number, answersNumber: number) {
-    let date = +new Date();
+    let date = new Date();
     this.activedIcon[questionID] = answersNumber;
     this.isFlagActive[questionID] = false;
     this.answers[questionID] = {questionID, answersNumber, date};

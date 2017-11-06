@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators, AbstractControl} from '@angular/for
 import { AlertController, NavController, MenuController, ToastController, Loading, LoadingController } from 'ionic-angular';
 import { TabsNavigationPage } from '../tabs-navigation/tabs-navigation';
 import { AuthService } from '../../providers/auth.service';
-import { UserCredentials } from '../../shared/interfaces';
 
 @Component({
   selector: 'page-home',
@@ -36,7 +35,6 @@ export class HomePage implements OnInit {
     this.password = this.loginFirebaseAccountForm.controls['password'];
   }
 
-
   ionViewDidEnter() {
     this.menuCtrl.enable(false);
     this.menuCtrl.swipeEnable(false);
@@ -56,7 +54,7 @@ export class HomePage implements OnInit {
       }).catch(error => {
         loading.dismiss();
         this.showError(error);
-        console.log(error);
+        console.error(error);
     });
   }
 

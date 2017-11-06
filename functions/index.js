@@ -4,6 +4,7 @@ const admin = require('firebase-admin');
 const moment = require('moment-timezone');
 admin.initializeApp(functions.config().firebase);
 var db = admin.database();
+var getDiferenceDays = require('./getDiferenceDays');
 exports.activeQuestions = require('./activeQuestions');
 
 var values = [];
@@ -14,7 +15,7 @@ exports.setAverage = functions.database.ref('/{idCT}/users/{idDQ}/answers')
     const root = event.data.ref.root
     return root.child(`/${event.params.idCT}/users/${event.params.idDQ}`)
       .once('value')
-      .then( snapshot => {
+      .then(snapshot => {
          snapshot.val().answers.forEach(_answer => {
              for (lastProperty in _answer){}
              values.push(_answer[lastProperty]['answersNumber']);
@@ -36,9 +37,9 @@ exports.gamificationCarrer = functions.database.ref('/{idCT}/users/{idDQ}/answer
     .on("value", snapshot => {
       if(snapshot.val()[Object.keys(snapshot.val())[(Object.keys(snapshot.val()).length)-2]] != null) {
         let pastAnswerDate = snapshot.val()[Object.keys(snapshot.val())[(Object.keys(snapshot.val()).length)-2]]['date'];
-        daysCurrent = getDiferenceDays(new Date(),pastAnswerDate);
+        daysCurrent = getDiferenceDays(moment(),pastAnswerDate);
       }
-    }),
+    });
     db.ref(`/${event.params.idCT}/users/${event.params.idDQ}/gamification/1/quantity`)
     .on("value", snapshot => {
       if(isFlag)
@@ -68,8 +69,8 @@ exports.gamificationCarrer = functions.database.ref('/{idCT}/users/{idDQ}/answer
            isActive: true
          });
       }
-    })
-  });
+  })
+});
 
 exports.gamificationTrophys = functions.database.ref('/{idCT}/users/{idDQ}/answers')
     .onWrite(event => {
@@ -80,15 +81,13 @@ exports.gamificationTrophys = functions.database.ref('/{idCT}/users/{idDQ}/answe
           return
         isFlag = true;
         let firstAnswerDate = snapshot.val()[Object.keys(snapshot.val())[0]]['date'];
-        if(firstAnswerDate != null) {
-          let daysCurrent = getDiferenceDays(new Date(),firstAnswerDate);
+        if(firstAnswerDate) {
+          let daysCurrent = getDiferenceDays(moment(),firstAnswerDate);
           admin.database()
            .ref(`/${event.params.idCT}/users/${event.params.idDQ}/gamification/9`)
            .update({
              quantity: daysCurrent
            });
-       } else
-         return
-
+       }
       })
     });
