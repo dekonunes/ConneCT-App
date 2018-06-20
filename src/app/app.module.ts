@@ -1,10 +1,9 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import * as firebase from 'firebase/app';
 
 import { AngularFireModule } from 'angularfire2';
-import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -16,7 +15,7 @@ import { AuthService } from '../providers/auth.service';
 import { UserService } from '../providers/user.service';
 import { EditTelephoneComponent } from '../components/edit-telephone/edit-telephone';
 
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyAL-OyrHkTqw4j4sgcapSnFKi0wFc61dNo",
   authDomain: "connect-48f5c.firebaseapp.com",
   databaseURL: "https://connect-48f5c.firebaseio.com",
