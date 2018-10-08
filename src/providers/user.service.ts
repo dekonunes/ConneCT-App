@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-
+import { Ct } from '../pages/user/ct.model';
 import { User } from '../pages/user/user.model';
 import { Answer } from '../pages/questions/answer.model';
 import { AuthService } from './auth.service'
@@ -14,6 +14,37 @@ export class UserService {
     public db: AngularFireDatabase,
     public authService: AuthService,
   ) {}
+
+  // updateNickname: Every time the nickname needs to be updated
+    updateNickname(nick:string) {
+      return new Promise(resolve =>
+        this.getUser().then((_user) => {
+          this.db.object(`/${_user.uidCT}/users/${_user.id}`)
+            .update({nickname: nick});
+          resolve();
+        })
+      )
+    }
+
+    updateLevel(level:string) {
+      return  new Promise(resolve =>
+        this.getUser().then((_user) => {
+          this.db.object(`/${_user.uidCT}/users/${_user.id}`)
+            .update({nivel: level});
+          resolve();
+        })
+      )
+    }
+
+    updateIcon(icone:string){
+      return new Promise(resolve =>
+        this.getUser().then((_user) => {
+          this.db.object(`/${_user.uidCT}/users/${_user.id}`)
+            .update({usericon: icone});
+          resolve();
+        })
+      )
+    }
 
   updateTelephone(newTelephone:string) {
     return new Promise(resolve =>
@@ -100,6 +131,23 @@ export class UserService {
     });
   }
 
+  getCT(): Promise<Ct> {
+    return new Promise(resolve => {
+      this.authService.getUID().then(_uidDQ => {
+        return _uidDQ;
+      }).then((_uidDQ: any) => {
+        this.listOfCTs$ = this.db.list(`/`);
+        this.listOfCTs$.valueChanges().subscribe(_CTs => {
+          _CTs.forEach(_DQs => {
+            if(_DQs['users'] != undefined)
+              if (_DQs['users'][_uidDQ] != undefined)
+                resolve(_DQs['data']);
+          })
+        })
+      })
+    });
+  }
+  
   getFirstAnswer(): Promise<string> {
     return new Promise(resolve => {
       this.getUser().then((_user) => {
@@ -112,6 +160,9 @@ export class UserService {
   pushAnswers(answers: Answer[]) {
     this.getUser().then((_user) => {
       answers.forEach((answer:Answer) => {
+        console.log(answer.date)
+        console.log(answer.date.toString())
+        answer.date = answer.date.toString()
         this.db.list(`/${_user.uidCT}/users/${_user.id}/answers/${answer.questionID}/`).push(answer);
       })
     })

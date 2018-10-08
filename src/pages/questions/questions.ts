@@ -73,7 +73,7 @@ export class QuestionsPage implements OnInit {
     let dateMoment = new Date();
     LocalNotifications.schedule({
       id: 1,
-      text: 'Como você esta hoje?',
+      text: 'Seu time precisa de você! Responda as perguntas e marque gols!',
       every:  'day',
       at: dateMoment.getMinutes() - 1,
     });

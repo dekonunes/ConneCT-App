@@ -1,6 +1,7 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import * as firebase from 'firebase/app';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
@@ -13,6 +14,7 @@ import { TabsNavigationPage } from '../pages/tabs-navigation/tabs-navigation';
 import { UserPage } from '../pages/user/user';
 import { AuthService } from '../providers/auth.service';
 import { UserService } from '../providers/user.service';
+import { AlertService } from "../providers/alert.service";
 import { EditTelephoneComponent } from '../components/edit-telephone/edit-telephone';
 
 const firebaseConfig = {
@@ -51,6 +53,6 @@ const firebaseConfig = {
     TabsNavigationPage,
     EditTelephoneComponent
   ],
-  providers: [AuthService,{provide: ErrorHandler, useClass: IonicErrorHandler},UserService]
+  providers: [AuthService,{provide: ErrorHandler, useClass: IonicErrorHandler},UserService,AlertService]
 })
 export class AppModule {}
