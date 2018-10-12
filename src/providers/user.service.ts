@@ -114,6 +114,19 @@ export class UserService {
     )
   }
 
+  resetQuestions() {
+    return new Promise(resolve =>
+      this.getUser().then((_user) => {
+        console.log(_user.uidCT);
+        console.log(_user.id);
+        for (let i = 0; i < _user.answers.length; i++){
+          this.db.object(`/${_user['uidCT']}/users/${_user['id']}/questions/${i}`).update({isActive: true});
+        }
+        resolve();
+      })
+    )
+  }
+
   getUser(): Promise<User> {
     return new Promise(resolve => {
         this.authService.getUID().then(_uidDQ => {
@@ -147,7 +160,21 @@ export class UserService {
       })
     });
   }
-  
+
+  getAllTeamsData(): Promise<any[]> {
+    return new Promise(resolve => {
+      this.listOfCTs$ = this.db.list(`/`);
+      this.listOfCTs$.valueChanges().subscribe(_CTs => {
+        let arr = []
+        _CTs.forEach(ct => {
+          if (ct['data'] != undefined)
+            arr.push(ct);
+        })
+        resolve(arr);
+      })
+    });
+  }
+
   getFirstAnswer(): Promise<string> {
     return new Promise(resolve => {
       this.getUser().then((_user) => {
@@ -162,7 +189,7 @@ export class UserService {
       answers.forEach((answer:Answer) => {
         console.log(answer.date)
         console.log(answer.date.toString())
-        answer.date = answer.date.toString()
+        // answer.date = answer.date
         this.db.list(`/${_user.uidCT}/users/${_user.id}/answers/${answer.questionID}/`).push(answer);
       })
     })
