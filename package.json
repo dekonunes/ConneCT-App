@@ -50,7 +50,8 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "^3.0.1",
-    "ionic": "3.20.0",
+    "@ionic/cli-plugin-ionic-angular": "1.4.1",
+    "ionic": "^3.20.0",
     "typescript": "2.9.1",
     "webpack": "^4.11.1"
   },

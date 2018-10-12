@@ -21,6 +21,11 @@ export class QuestionsPage implements OnInit {
   numberQuestionsDesactived: number = 0;
   loading: Loading;
   loadingFlag: boolean = false;
+  shouldLoadMore: boolean = false;
+
+  // CLEAR ANSWERED QUESTIONS:
+  do_clear_questions = true;
+  // ####*####*####*####*####
 
   constructor(
     public alertCtrl: AlertController,
@@ -48,17 +53,35 @@ export class QuestionsPage implements OnInit {
     this.navCtrl.setRoot(this.navCtrl.getActive().component);
   }
 
+  showMore(): Promise<any> {
+    this.shouldLoadMore = !this.shouldLoadMore;
+    return new Promise((resolve) => {
+      resolve();
+    });
+  }
+
   updateQuestions(): Promise<any> {
     this.loading = this.showLoading();
     return new Promise((resolve) => {
       this.numberQuestionsDesactived = 0;
-      this.userService.getUser().then(_user => {
-        this.questions = _user.questions;
-        this.getQuantityAnswered();
-        this.loadingFlag = true;
-        this.loading.dismiss();
-        resolve();
-      });
+      this.toRefresh().then(() => {
+        this.userService.getUser().then(_user => {
+          this.questions = _user.questions;
+          this.getQuantityAnswered();
+          this.loadingFlag = true;
+          this.loading.dismiss();
+          resolve();
+        });
+      })
+    });
+  }
+
+  toRefresh(): Promise<any> {
+    if (this.do_clear_questions) {
+      return this.userService.resetQuestions();
+    }
+    return new Promise((resolve) => {
+      resolve();
     });
   }
 
@@ -88,10 +111,10 @@ export class QuestionsPage implements OnInit {
       return new Promise((resolve) => {
         this.userService.pushAnswers(this.answers);
         this.questionAnwered(this.answers);
-        this.userService.setRanking(quantityAnwersRanking*5);
+        this.userService.setRanking(quantityAnwersRanking*(this.shouldLoadMore ? 1: 5));
         this.alertDescription(
           "Respostas enviadas",
-          `Você ganhou ${quantityAnwersRanking*5} pontos`,
+          `Você ganhou ${quantityAnwersRanking*(this.shouldLoadMore ? 1: 5)} pontos`,
           "no ranking");
         this.updatePage();
         this.sendNotification();

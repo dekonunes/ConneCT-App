@@ -44,8 +44,10 @@ export class MyApp {
   }
 
   logOut() {
-    this.authService.logOut().then(() => this.nav.setRoot(HomePage));
-    // this.authService.logOut().then(() => this.navCtrl.pop());
+    this.authService.logOut().then(() => {
+      // this.nav.setRoot(HomePage);
+      // this.nav.push(HomePage)
+    });
   }
 
   goToOtherPage(page: {title: string, component: any, icon: string}): void {

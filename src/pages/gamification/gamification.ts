@@ -3,7 +3,8 @@ import { NavController, AlertController } from 'ionic-angular';
 import { Gamification } from './gamification.model';
 import { UserService } from '../../providers/user.service';
 import { User } from '../user/user.model';
-import {AlertService} from "../../providers/alert.service";
+import { Ct } from '../user/ct.model';
+import { AlertService } from "../../providers/alert.service";
 
 @Component({
   selector: 'page-gamification',
@@ -15,6 +16,8 @@ export class GamificationPage implements OnInit {
   ribbonsCareers: Gamification[] = [];
   ribbonsTopScore: Gamification[] = [];
   positionRanking: number;
+  teamRanking: number;
+  teamTotalPoints: number;
   daysCurrent: number = 0;
   heightTrophys: number = 40;
   userNickname: string;
@@ -71,6 +74,8 @@ export class GamificationPage implements OnInit {
       });
       this.userService.getPositionRanking().then((position: number) => this.positionRanking = position);
       this.userService.getCT().then((ct) => { this.team = ct.username})
+      this.getOverallScore().then((team_points) => {this.teamRanking = team_points[0]; this.teamTotalPoints = team_points[1];})
+
       resolve();
     });
   }
@@ -222,6 +227,53 @@ export class GamificationPage implements OnInit {
     alert.present();
   }
 
+  getOverallScore(): Promise<number[]> {
+    return Promise.all([
+      this.userService.getUser(),
+      this.userService.getAllTeamsData()
+    ]).then(values => {
+      let user: User = values[0];
+      let teams_data = values[1];
+      let user_team = undefined;
+      let user_team_score = undefined;
+      let under_teams = 0;
+      let scores = {}
+      for (let team_data of teams_data) {
+        let team: Ct = team_data['data']
+        let users: User[] = team_data['users']
+        let total = this.getTeamTotalScore(team, users);
+        if (total != undefined) {
+          scores[team.id] = total;
+        }
+        if (team.id == user.uidCT) {
+          user_team = team;
+          user_team_score = scores[user_team.id];
+        }
+      }
+      for (let score_key of Object.keys(scores)) {
+        let score = scores[score_key];
+        if (score < user_team_score) {
+          under_teams++;
+        }
+      }
+      return [(100 * (under_teams / Object.keys(scores).length)), user_team_score];
+    });
+  }
+
+  getTeamTotalScore(team: Ct, users: User[]): number {
+    let total = 0;
+
+    if (users == undefined || team == undefined) return undefined;
+    Object.keys(users).forEach(function (key) {
+      let user = users[key];
+      if (user.gamification != undefined) {
+        total += user.gamification[0].quantity;
+      }
+    })
+
+    return total;
+  }
+
   getStyleImgTrophy() {
     return {
       '-webkit-clip-path': `inset(0px ${100-(this.daysCurrent/365*100)}% 0px 0px)`,
@@ -231,8 +283,8 @@ export class GamificationPage implements OnInit {
 
   getStyleImgRanking() {
     return {
-      '-webkit-clip-path': `inset(${100-this.positionRanking}% 0px 0px 0px)`,
-      'clip-path': `inset(${100-this.positionRanking}% 0px 0px 0px)`,
+      '-webkit-clip-path': `inset(${100-this.teamRanking}% 0px 0px 0px)`,
+      'clip-path': `inset(${100-this.teamRanking}% 0px 0px 0px)`,
       'float': 'right'}
   }
 
