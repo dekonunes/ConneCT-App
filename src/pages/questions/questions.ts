@@ -24,7 +24,7 @@ export class QuestionsPage implements OnInit {
   shouldLoadMore: boolean = false;
 
   // CLEAR ANSWERED QUESTIONS:
-  do_clear_questions = true;
+  do_clear_questions = false;
   // ####*####*####*####*####
 
   constructor(
