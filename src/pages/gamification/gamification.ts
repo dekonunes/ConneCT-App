@@ -283,15 +283,15 @@ export class GamificationPage implements OnInit {
 
   getStyleImgRanking() {
     return {
-      '-webkit-clip-path': `inset(${100-this.teamRanking}% 0px 0px 0px)`,
-      'clip-path': `inset(${100-this.teamRanking}% 0px 0px 0px)`,
+      '-webkit-clip-path': `inset(${100-this.positionRanking}% 0px 0px 0px)`,
+      'clip-path': `inset(${100-this.positionRanking}% 0px 0px 0px)`,
       'float': 'right'}
   }
 
   getStyleImgRankingTeam() {
     return {
-      '-webkit-clip-path': `inset(${100-this.positionRanking+10}% 0px 0px 0px)`,
-      'clip-path': `inset(${100-this.positionRanking-10}% 0px 0px 0px)`,
+      '-webkit-clip-path': `inset(${100-this.teamRanking}% 0px 0px 0px)`,
+      'clip-path': `inset(${100-this.teamRanking}% 0px 0px 0px)`,
       'float': 'right'}
   }
 }

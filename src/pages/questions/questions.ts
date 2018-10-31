@@ -120,7 +120,9 @@ export class QuestionsPage implements OnInit {
         this.sendNotification();
         this.answers = [];
         this.activedIcon = [];
-        this.isFlagActive.fill(true);
+        if(!this.shouldLoadMore){
+          this.isFlagActive.fill(true);
+        }
       });
     } else {
       let alert = this.alertCtrl.create({
