@@ -74,7 +74,7 @@ export class GamificationPage implements OnInit {
       });
       this.userService.getPositionRanking().then((position: number) => this.positionRanking = position);
       this.userService.getCT().then((ct) => { this.team = ct.username})
-      this.getOverallScore().then((team_points) => {this.teamRanking = team_points[0]; this.teamTotalPoints = team_points[1];})
+      this.getOverallScore().then((team_points) => {this.teamRanking = Math.round(team_points[0]); this.teamTotalPoints = team_points[1];})
 
       resolve();
     });
@@ -95,34 +95,34 @@ export class GamificationPage implements OnInit {
 
   getLevel(ptos) {
     let lvl = 'Pelada na Rua';
-    if(ptos >= 0 && ptos < 150){
+    if(ptos >= 0 && ptos < 400){
       lvl = 'Pelada na Rua';
     }
-    if(ptos > 150 && ptos < 200){
+    if(ptos > 400 && ptos < 900){
       lvl = 'Campeonato da Cidade';
     }
-    if(ptos > 200 && ptos < 350){
+    if(ptos > 900 && ptos < 1500){
       lvl = 'Campeonato Estadual';
     }
-    if(ptos > 350 && ptos < 450){
+    if(ptos > 1500 && ptos < 2200){
       lvl = 'Campeonato Brasileiro';
     }
-    if(ptos > 450 && ptos < 550){
+    if(ptos > 2200 && ptos < 3200){
       lvl = 'Libertadores';
     }
-    if(ptos > 550 && ptos < 650){
+    if(ptos > 3200 && ptos < 3900){
       lvl = 'Liga Europa';
     }
-    if(ptos > 650 && ptos < 750){
+    if(ptos > 3900 && ptos < 4500){
       lvl = 'Liga dos Campeões';
     }
-    if(ptos > 750 && ptos < 850){
+    if(ptos > 4500 && ptos < 5000){
       lvl = 'Copa das Confederações';
     }
-    if(ptos > 850 && ptos < 950){
+    if(ptos > 5000 && ptos < 5400){
       lvl = 'Olimpíadas';
     }
-    if(ptos > 950 && ptos < 1100){
+    if(ptos > 5400){
       lvl = 'Copa do Mundo';
     }
     return lvl;
@@ -163,8 +163,8 @@ export class GamificationPage implements OnInit {
         };
 
         let nao_criar_nick = (data) =>{
-
           this.alertService.createAlertOK('Criar Apelido', "Seu apelido será \"Jogador\". Você poderá mudar depois quando quiser.", () => {})
+          this.requestChangeNickname("Jogador");
         };
         this.alertService.createAlertYesNo("Criar Apelido", "O nosso sistema agora possui a função de apelidos!\nDeseja criar um agora?", "Sim", "Não", criar_nick, nao_criar_nick)
       }

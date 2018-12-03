@@ -23,6 +23,8 @@ export class QuestionsPage implements OnInit {
   loadingFlag: boolean = false;
   shouldLoadMore: boolean = false;
 
+  user_nick: string;
+
   // CLEAR ANSWERED QUESTIONS:
   do_clear_questions = false;
   // ####*####*####*####*####
@@ -66,6 +68,7 @@ export class QuestionsPage implements OnInit {
       this.numberQuestionsDesactived = 0;
       this.toRefresh().then(() => {
         this.userService.getUser().then(_user => {
+          this.user_nick = _user.nickname;
           this.questions = _user.questions;
           this.getQuantityAnswered();
           this.loadingFlag = true;

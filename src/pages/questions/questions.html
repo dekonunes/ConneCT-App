@@ -17,8 +17,9 @@
     </ion-refresher-content>
   </ion-refresher>
   <div *ngIf="numberQuestionsDesactived >= questions.length && loadingFlag === true">
-    <div *ngIf="shouldLoadMore === false">
-      <button ion-button clear color="dark"(click)="showMore()">Deseja responder novamente?</button>
+    <div *ngIf="shouldLoadMore === false" class="loadMore">
+      <p> Obrigado por responder as questões {{user_nick}}!</p>
+      <button class="butao" ion-button clear color="dark"(click)="showMore()"><strong>Deseja responder novamente?</strong></button>
     </div>
     <div *ngIf="shouldLoadMore === true">
       <div>

@@ -88,7 +88,10 @@ export class UserService {
   getQuantityPointsRanking(): Promise<number> {
     return new Promise(resolve =>
       this.getUser().then(_user => {
-        this.db.object(`/rankingGlobal/${_user.id}`).valueChanges().subscribe(quantityObject => resolve(quantityObject['quantity']));
+        this.db.object(`/rankingGlobal/${_user.id}`).valueChanges().subscribe(quantityObject => {
+          let quantity = quantityObject == null  ? 0 : quantityObject['quantity']
+          resolve(quantity);
+        });
       }));
   }
 
