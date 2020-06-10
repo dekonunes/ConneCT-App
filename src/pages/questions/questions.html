@@ -16,34 +16,65 @@
       refreshingText="Atualizando...">
     </ion-refresher-content>
   </ion-refresher>
-  <div *ngIf="numberQuestionsDesactived === questions.length && loadingFlag === true">
-    <img src="assets/images/imagens/allQuestionsAnswered.png" alt="">
+  <div *ngIf="numberQuestionsDesactived >= questions.length && loadingFlag === true">
+    <div *ngIf="shouldLoadMore === false" class="loadMore">
+      <p> Obrigado por responder as questões {{user_nick}}!</p>
+      <button class="butao" ion-button clear color="dark"(click)="showMore()"><strong>Deseja responder novamente?</strong></button>
+    </div>
+    <div *ngIf="shouldLoadMore === true">
+      <div>
+        <div *ngFor="let question of questions">
+          <ion-card>
+            <ion-card-title text-center>
+              <button ion-button clear color="dark" icon-right
+                      (click)="alertDescription(question.title, question.description, question.answers)">
+                <h1>{{question?.title}}</h1>
+                <ion-icon style="font-size:23px;margin-top:-6px;" name="information-circle"></ion-icon>
+              </button>
+            </ion-card-title>
+            <ion-grid>
+              <ion-row >
+                <ion-col *ngFor="let number of [1,2,3,4,5]" >
+                  <button ion-button clear icon-only (click)="sendAnwers(question.id,number)">
+                    <img *ngIf="number === activedIcon[question.id] || isFlagActive[question.id]" src="assets/images/iconsQuestions/icon{{number}}.svg" class="icon">
+                    <img *ngIf="number !== activedIcon[question.id] && !isFlagActive[question.id]" src="assets/images/iconsQuestions/icon{{number}}.svg" class="icon grayscale">
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </div>
+        <button ion-button color="primary" (click)="confirmAnswers()" (click)="updatePage()" block>
+          Enviar
+        </button>
+      </div>
+    </div>
   </div>
   <div *ngIf="numberQuestionsDesactived < questions.length">
     <div *ngFor="let question of questions">
-        <ion-card *ngIf="question.isActive">
+      <ion-card *ngIf="question.isActive">
         <ion-card-title text-center>
           <button ion-button clear color="dark" icon-right
-                (click)="alertDescription(question.title,question.description, question.answers)">
+                  (click)="alertDescription(question.title,question.description, question.answers)">
             <h1>{{question?.title}}</h1>
             <ion-icon style="font-size:23px;margin-top:-6px;" name="information-circle"></ion-icon>
           </button>
         </ion-card-title>
-              <ion-grid>
-                <ion-row >
-                    <ion-col *ngFor="let number of [1,2,3,4,5]" >
-                      <button ion-button clear icon-only (click)="sendAnwers(question.id,number)">
-                        <img *ngIf="number === activedIcon[question.id] || isFlagActive[question.id]" src="assets/images/iconsQuestions/icon{{number}}.svg" class="icon">
-                        <img *ngIf="number !== activedIcon[question.id] && !isFlagActive[question.id]" src="assets/images/iconsQuestions/icon{{number}}.svg" class="icon grayscale">
-                      </button>
-                    </ion-col>
-                </ion-row>
-              </ion-grid>
-        </ion-card>
-      </div>
-      <button ion-button color="primary" (click)="confirmAnswers()" (click)="updatePage()" block>
-        Enviar
-      </button>
+        <ion-grid>
+          <ion-row >
+            <ion-col *ngFor="let number of [1,2,3,4,5]" >
+              <button ion-button clear icon-only (click)="sendAnwers(question.id,number)">
+                <img *ngIf="number === activedIcon[question.id] || isFlagActive[question.id]" src="assets/images/iconsQuestions/icon{{number}}.svg" class="icon">
+                <img *ngIf="number !== activedIcon[question.id] && !isFlagActive[question.id]" src="assets/images/iconsQuestions/icon{{number}}.svg" class="icon grayscale">
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+    <button ion-button color="primary" (click)="confirmAnswers()" (click)="updatePage()" block>
+      Enviar
+    </button>
   </div>
 
 </ion-content>
