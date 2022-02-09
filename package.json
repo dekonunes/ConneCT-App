@@ -43,7 +43,7 @@
     "ionic-plugin-keyboard": "^2.2.1",
     "ionicons": "^4.1.2",
     "mime": "^2.0.3",
-    "node-sass": "^4.9.0",
+    "node-sass": "^7.0.0",
     "promise-polyfill": "8.0.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^6.2.0",
